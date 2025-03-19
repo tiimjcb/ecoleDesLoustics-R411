@@ -1,21 +1,102 @@
 package fr.iut.androidprojet;
 
-import android.os.Build;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.List;
+import fr.iut.androidprojet.adapter.UserAdapter;
+import fr.iut.androidprojet.database.DatabaseClient;
+import fr.iut.androidprojet.model.User;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE_ADD_USER = 1;
+    private RecyclerView recyclerViewUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
+        recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
+
+        LinearLayout btnAddUser = findViewById(R.id.btnAddUser);
+        btnAddUser.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CreateUserActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_ADD_USER); // faut attendre le résultat pour recharger la liste
+        });
+
+        loadUsers();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_ADD_USER && resultCode == RESULT_OK) {
+            loadUsers();
+        }
+    }
+
+    private void loadUsers() {
+        class GetUsers extends AsyncTask<Void, Void, List<User>> {
+            @Override
+            protected List<User> doInBackground(Void... voids) {
+                return DatabaseClient.getInstance(getApplicationContext())
+                        .getAppDatabase()
+                        .userDao()
+                        .getAllUsers();
+            }
+
+            @Override
+            protected void onPostExecute(List<User> users) {
+                super.onPostExecute(users);
+                UserAdapter adapter = new UserAdapter(users, user -> {
+                    Toast.makeText(MainActivity.this, "Utilisateur sélectionné: " + user.getFirstName(), Toast.LENGTH_SHORT).show();
+                }, user -> {
+                    showDeleteConfirmation(user);
+                });
+                recyclerViewUsers.setAdapter(adapter);
+            }
+        }
+        new GetUsers().execute();
+    }
+
+    private void showDeleteConfirmation(User user) {
+        new AlertDialog.Builder(this)
+                .setTitle("Supprimer utilisateur")
+                .setMessage("Voulez-vous vraiment supprimer " + user.getFirstName() + " ?")
+                .setPositiveButton("Oui", (dialog, which) -> deleteUserFromDatabase(user))
+                .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+
+    private void deleteUserFromDatabase(User user) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(getApplicationContext())
+                        .getAppDatabase()
+                        .userDao()
+                        .deleteUser(user);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                loadUsers();
+                Toast.makeText(MainActivity.this, user.getFirstName() + " supprimé", Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
     }
 }

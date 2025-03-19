@@ -2,26 +2,60 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp"
-    android:background="@drawable/user_container"
     android:gravity="center_vertical"
-    android:layout_marginBottom="8dp">
+    android:padding="10dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginHorizontal="16dp">
 
-    <!-- Avatar -->
-    <ImageView
-        android:id="@+id/userAvatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/circle_background"
-        android:padding="10dp"
-        android:src="@drawable/ic_avatar"
-        android:contentDescription="Avatar"/>
-
-    <!-- Nom de l'utilisateur -->
-    <TextView
-        android:id="@+id/textViewName"
-        android:layout_width="wrap_content"
+    <!-- Partie utilisateur (70%) -->
+    <LinearLayout
+        android:id="@+id/userContainer"
+        android:layout_width="0dp"
+        android:layout_weight="7"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginStart="16dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:background="@drawable/user_container"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- Avatar -->
+        <ImageView
+            android:id="@+id/iconAvatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/circle_background"
+            android:padding="10dp"
+            android:src="@drawable/ic_avatar"
+            android:contentDescription="Avatar"/>
+
+        <!-- Nom et Prénom -->
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prénom Nom"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <!-- Gap (10%) -->
+    <View
+        android:id="@+id/gapView"
+        android:layout_width="0dp"
+        android:layout_weight="0.25"
+        android:layout_height="match_parent"/>
+
+    <!-- Bouton Supprimer (20%) -->
+    <ImageView
+        android:id="@+id/btnDeleteUser"
+        android:layout_width="0dp"
+        android:layout_weight="2."
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:scaleType="center"
+        android:background="@drawable/rounded_red_button"
+        android:src="@drawable/ic_delete"
+        android:contentDescription="Supprimer"/>
 </LinearLayout>

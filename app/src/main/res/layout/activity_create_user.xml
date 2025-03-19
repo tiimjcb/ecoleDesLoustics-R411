@@ -1,0 +1,95 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:fitsSystemWindows="true"
+    android:padding="16dp">
+
+    <!-- Inclusion de la Toolbar -->
+    <include layout="@layout/toolbar"/>
+
+    <!-- Titre -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Créer un utilisateur"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Champ Prénom -->
+    <EditText
+        android:id="@+id/inputFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Prénom"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:background="@drawable/user_container"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="16dp"/>
+
+    <!-- Champ Nom -->
+    <EditText
+        android:id="@+id/inputLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nom"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:background="@drawable/user_container"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="16dp"/>
+
+
+    <!-- Boutons Annuler & Confirmer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- Bouton Annuler -->
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/user_container"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Annuler"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Espace entre les boutons -->
+        <View
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
+        <!-- Bouton Confirmer -->
+        <TextView
+            android:id="@+id/btnConfirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/user_container"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Confirmer"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
