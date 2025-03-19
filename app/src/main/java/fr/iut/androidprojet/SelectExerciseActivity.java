@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import fr.iut.androidprojet.database.DatabaseClient;
+import fr.iut.androidprojet.model.User;
 
 public class SelectExerciseActivity extends AppCompatActivity {
 
@@ -25,12 +26,12 @@ public class SelectExerciseActivity extends AppCompatActivity {
         textSelectedUser = findViewById(R.id.textSelectedUser);
         textUserScore = findViewById(R.id.textUserScore);
         btnBackToUsers = findViewById(R.id.btnBackToUsers);
-        cardAdditions = findViewById(R.id.cardAdditions); // Récupération de la carte des additions
+        cardAdditions = findViewById(R.id.cardAdditions);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         firstName = sharedPreferences.getString("user_first_name", "Inconnu");
         lastName = sharedPreferences.getString("user_last_name", "Utilisateur");
-        userId = sharedPreferences.getInt("user_id", -1); // On récupère aussi l'ID du user
+        userId = sharedPreferences.getInt("user_id", -1);
 
         textSelectedUser.setText("Utilisateur sélectionné : " + firstName + " " + lastName);
 
@@ -39,6 +40,7 @@ public class SelectExerciseActivity extends AppCompatActivity {
         // Gestion du clic sur la carte des additions
         cardAdditions.setOnClickListener(v -> {
             Intent intent = new Intent(SelectExerciseActivity.this, AdditionActivity.class);
+            intent.putExtra("user_id", userId);
             startActivity(intent);
         });
 

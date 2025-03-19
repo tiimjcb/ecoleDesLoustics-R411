@@ -14,11 +14,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Réponds aux additions le plus rapidement"
+        android:text="Réponds aux additions"
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
 
 
     <!-- Liste des additions -->
@@ -30,6 +31,12 @@
         android:orientation="vertical"
         android:layout_marginHorizontal="16dp"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/scoreSummary"/>
 
     <!-- Boutons statiques en bas -->
     <LinearLayout

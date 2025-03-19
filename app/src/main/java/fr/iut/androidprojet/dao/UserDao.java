@@ -24,4 +24,7 @@ public interface UserDao {
 
     @Query("UPDATE users SET score = :score WHERE id = :userId")
     void updateUserScore(int userId, int score);
+
+    @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
+    User getUserById(int userId);
 }

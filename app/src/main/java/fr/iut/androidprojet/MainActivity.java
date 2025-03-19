@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loadUsers();
+
+
     }
 
     @Override
@@ -62,20 +64,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<User> users) {
                 super.onPostExecute(users);
-                UserAdapter adapter = new UserAdapter(users, user -> {
-                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("user_id", user.getId());
-                    editor.putString("user_first_name", user.getFirstName());
-                    editor.putString("user_last_name", user.getLastName());
-                    editor.apply();
+                UserAdapter adapter = new UserAdapter(users,
+                        user -> {
+                            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("user_id", user.getId());
 
-                    Intent intent = new Intent(MainActivity.this, SelectExerciseActivity.class);
-                    startActivity(intent);
+                            editor.putString("user_first_name", user.getFirstName());
+                            editor.putString("user_last_name", user.getLastName());
+                            editor.apply();
 
-                }, user -> {
-                    showDeleteConfirmation(user);
-                });
+                            Intent intent = new Intent(MainActivity.this, SelectExerciseActivity.class);
+                            startActivity(intent);
+                        },
+                        user -> {
+                            showDeleteConfirmation(user);
+                }
+                );
                 recyclerViewUsers.setAdapter(adapter);
             }
         }

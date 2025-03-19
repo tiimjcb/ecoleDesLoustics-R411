@@ -27,9 +27,7 @@ public class CreateUserActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.btnCancel);
         btnConfirm = findViewById(R.id.btnConfirm);
 
-        btnCancel.setOnClickListener(v -> {
-            finish();
-        });
+        btnCancel.setOnClickListener(v -> finish());
 
         btnConfirm.setOnClickListener(v -> {
             String firstName = inputFirstName.getText().toString().trim();
