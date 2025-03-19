@@ -7,13 +7,14 @@ import androidx.room.PrimaryKey;
 public class User {
     @PrimaryKey(autoGenerate = true)
     public int id;
-
     public String firstName;
     public String lastName;
+    public int score;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.score = 0;
     }
 
     public String getFirstName() {
@@ -22,5 +23,17 @@ public class User {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getScore(){
+        return score;
+    }
+
+    public void setScore(int score){
+        this.score = score;
     }
 }

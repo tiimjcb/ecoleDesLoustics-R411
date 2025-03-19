@@ -1,6 +1,8 @@
 package fr.iut.androidprojet;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
@@ -61,7 +63,16 @@ public class MainActivity extends AppCompatActivity {
             protected void onPostExecute(List<User> users) {
                 super.onPostExecute(users);
                 UserAdapter adapter = new UserAdapter(users, user -> {
-                    Toast.makeText(MainActivity.this, "Utilisateur sélectionné: " + user.getFirstName(), Toast.LENGTH_SHORT).show();
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("user_id", user.getId());
+                    editor.putString("user_first_name", user.getFirstName());
+                    editor.putString("user_last_name", user.getLastName());
+                    editor.apply();
+
+                    Intent intent = new Intent(MainActivity.this, SelectExerciseActivity.class);
+                    startActivity(intent);
+
                 }, user -> {
                     showDeleteConfirmation(user);
                 });

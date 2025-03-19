@@ -1,0 +1,208 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:fitsSystemWindows="true"
+    android:padding="16dp">
+
+    <!-- Inclusion de la Toolbar -->
+    <include layout="@layout/toolbar"/>
+
+    <!-- Titre -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sélectionner un exercice"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        />
+
+    <!-- Sous-titre utilisateur sélectionné -->
+    <TextView
+        android:id="@+id/textSelectedUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Utilisateur sélectionné : ..."
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Score utilisateur -->
+    <TextView
+        android:id="@+id/textUserScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Score : 0"
+        android:textSize="18sp"
+        android:gravity="center" />
+
+    <!-- Cartes d'exercices -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="16dp">
+
+        <!-- Carte 1 -->
+        <LinearLayout
+            android:id="@+id/cardAdditions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:background="@drawable/user_container"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <!-- Cercle pour icône -->
+            <ImageView
+                android:id="@+id/iconAdditions"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/circle_background"
+                android:padding="10dp"
+                android:src="@drawable/ic_plus"
+                android:contentDescription="Additions"/>
+
+            <!-- Textes -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Additions"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Série de 10 additions simples!"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Carte 2 -->
+        <LinearLayout
+            android:id="@+id/cardMultiply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:background="@drawable/user_container"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <!-- Cercle pour icône -->
+            <ImageView
+                android:id="@+id/iconMultiply"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/circle_background"
+                android:padding="10dp"
+                android:src="@drawable/ic_multiply"
+                android:contentDescription="Multiplications"/>
+
+            <!-- Textes -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Multiplications"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Entraine toi sur la table de ton choix!"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Carte 3 -->
+        <LinearLayout
+            android:id="@+id/cardCulture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:background="@drawable/user_container"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <!-- Cercle pour icône -->
+            <ImageView
+                android:id="@+id/iconCulture"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/circle_background"
+                android:padding="10dp"
+                android:src="@drawable/ic_quiz"
+                android:contentDescription="Culture générale"/>
+
+            <!-- Textes -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Culture générale"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Teste ta culture générale!"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Bouton Retour aux utilisateurs -->
+    <TextView
+        android:id="@+id/btnBackToUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Retour aux utilisateurs"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/user_container"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginHorizontal="16dp"/>
+</LinearLayout>

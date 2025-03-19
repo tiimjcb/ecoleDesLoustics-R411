@@ -19,4 +19,9 @@ public interface UserDao {
     @Delete
     void deleteUser(User user);
 
+    @Query("SELECT score FROM users WHERE id = :userId")
+    int getUserScore(int userId);
+
+    @Query("UPDATE users SET score = :score WHERE id = :userId")
+    void updateUserScore(int userId, int score);
 }
