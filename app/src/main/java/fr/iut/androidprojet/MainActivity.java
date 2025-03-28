@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import fr.iut.androidprojet.adapter.UserAdapter;
+import fr.iut.androidprojet.data.QuestionSamples;
+import fr.iut.androidprojet.database.AppDatabase;
 import fr.iut.androidprojet.database.DatabaseClient;
 import fr.iut.androidprojet.model.User;
 
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loadUsers();
-
+        populateQuestionsIfNeeded();
 
     }
 
@@ -112,6 +114,20 @@ public class MainActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 loadUsers();
                 Toast.makeText(MainActivity.this, user.getFirstName() + " supprimé", Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
+    }
+
+    // nécéssaire pour remplir la base de données avec des questions si jamais y'a rien
+    private void populateQuestionsIfNeeded() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                AppDatabase db = DatabaseClient.getInstance(getApplicationContext()).getAppDatabase();
+                if (db.questionFrDao().countQuestions() == 0) {
+                    db.questionFrDao().insertAll(QuestionSamples.getAll());
+                }
+                return null;
             }
         }.execute();
     }

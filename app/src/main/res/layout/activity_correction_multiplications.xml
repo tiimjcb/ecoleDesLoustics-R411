@@ -7,62 +7,59 @@
     android:paddingHorizontal="16dp"
     android:fitsSystemWindows="true">
 
-    <!-- Inclusion de la Toolbar -->
     <include layout="@layout/toolbar"/>
 
-    <!-- Titre -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Réponds aux additions"
+        android:text="Correction - multiplications"
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="16dp"/>
 
     <TextView
-        android:id="@+id/textProgress"
-        android:layout_width="wrap_content"
+        android:id="@+id/textCorrectionScore"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Addition 1/10"
-        android:textSize="16sp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="12dp"/>
+        android:text="Score : 7/10"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="16dp"/>
 
-    <!-- Liste des additions -->
-    <LinearLayout
-        android:id="@+id/additionContainer"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="16dp"
-        />
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="16dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:id="@+id/scoreSummary"/>
+        <LinearLayout
+            android:id="@+id/multiplicationCorrectionContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp"/>
+    </ScrollView>
 
-    <!-- Boutons statiques en bas -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="16dp">
 
         <TextView
-            android:id="@+id/btnBack"
+            android:id="@+id/btnBackToExercises"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Retour"
+            android:text="Retour aux exercices"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -74,11 +71,11 @@
             android:layout_marginEnd="8dp"/>
 
         <TextView
-            android:id="@+id/btnValidate"
+            android:id="@+id/btnRetry"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Valider"
+            android:layout_height="match_parent"
+            android:text="Recommencer"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"

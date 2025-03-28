@@ -7,62 +7,67 @@
     android:paddingHorizontal="16dp"
     android:fitsSystemWindows="true">
 
-    <!-- Inclusion de la Toolbar -->
-    <include layout="@layout/toolbar"/>
+    <!-- ✅ Toolbar -->
+    <include layout="@layout/toolbar" />
 
-    <!-- Titre -->
+    <!-- ✅ Titre principal -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Réponds aux additions"
-        android:textSize="20sp"
+        android:text="Quiz Français"
+        android:textSize="36sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp" />
 
-    <TextView
-        android:id="@+id/textProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Addition 1/10"
-        android:textSize="16sp"
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="12dp"/>
-
-    <!-- Liste des additions -->
-    <LinearLayout
-        android:id="@+id/additionContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_quiz"
         />
 
+    <!-- ✅ Sous-titre -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:id="@+id/scoreSummary"/>
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="Réponds à 40 questions de français le plus rapidement possible !"
+        android:textSize="24sp" />
 
-    <!-- Boutons statiques en bas -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tu as 3 vies! Dès que tu n'en as plus, c'est fini !"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginHorizontal="8dp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- ✅ Boutons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="16dp">
 
         <TextView
-            android:id="@+id/btnBack"
+            android:id="@+id/btnReturn"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Retour"
+            android:text="Retour aux exercices"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -70,15 +75,16 @@
             android:padding="12dp"
             android:background="@drawable/user_container"
             android:clickable="true"
-            android:focusable="true"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp"
+
+            android:focusable="true" />
 
         <TextView
-            android:id="@+id/btnValidate"
+            android:id="@+id/btnStart"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Valider"
+            android:layout_height="match_parent"
+            android:text="Démarrer"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -87,6 +93,7 @@
             android:background="@drawable/user_container"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            />
     </LinearLayout>
 </LinearLayout>

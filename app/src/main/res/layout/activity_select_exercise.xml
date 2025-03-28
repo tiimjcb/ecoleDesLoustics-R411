@@ -143,7 +143,7 @@
 
         <!-- Carte 3 -->
         <LinearLayout
-            android:id="@+id/cardCulture"
+            android:id="@+id/cardFrancais"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -174,16 +174,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Culture générale"
+                    android:text="Quiz Français"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Teste ta culture générale!"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray"/>
+                    android:text="Sauras-tu répondre aux 40 questions ?"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 

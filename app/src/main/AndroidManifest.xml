@@ -22,7 +22,12 @@
         </activity>
         <activity android:name=".CreateUserActivity"/>
         <activity android:name=".SelectExerciseActivity"/>
-        <activity android:name=".AdditionActivity"/>
+        <activity android:name=".additions.AdditionActivity"/>
+        <activity android:name=".additions.AdditionCorrectionActivity" />
+        <activity android:name=".multiplications.MultiplicationActivity"/>
+        <activity android:name=".multiplications.MultiplicationCorrectionActivity" />
+        <activity android:name=".quizzFrancais.FrancaisSplashScreenActivity" />
+        <activity android:name=".quizzFrancais.FrancaisQuizActivity" />
     </application>
 
 </manifest>

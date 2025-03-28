@@ -1,0 +1,185 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:paddingHorizontal="16dp"
+    android:fitsSystemWindows="true">
+
+    <!-- ✅ Toolbar -->
+    <include layout="@layout/toolbar" />
+
+    <!-- ✅ Titre principal -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quiz Français"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="16dp"
+        />
+
+    <!-- ✅ Sous-titre question actuelle -->
+    <TextView
+        android:id="@+id/textQuestionProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Question 1/40"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="16dp"
+        />
+
+    <!-- ✅ Chronomètre -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_timer"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/textTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="00:00"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="16dp"/>
+
+    </LinearLayout>
+
+
+    <!-- ✅ Vies (3 cœurs) -->
+    <LinearLayout
+        android:id="@+id/lifeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="24dp"
+        android:layout_marginHorizontal="16dp"
+        >
+
+        <ImageView
+            android:id="@+id/heart1"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_filled_heart"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageView
+            android:id="@+id/heart2"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_filled_heart"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageView
+            android:id="@+id/heart3"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_filled_heart"/>
+    </LinearLayout>
+
+    <!-- ✅ Question -->
+    <TextView
+        android:id="@+id/textQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quel est le synonyme de 'rapide' ?"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"
+        android:layout_marginHorizontal="16dp"
+        />
+
+    <!-- ✅ Réponses -->
+    <TextView
+        android:id="@+id/btnAnswerA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Réponse A"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="48dp"
+        android:background="@drawable/user_container"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <TextView
+        android:id="@+id/btnAnswerB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Réponse B"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="48dp"
+        android:background="@drawable/user_container"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <TextView
+        android:id="@+id/btnAnswerC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Réponse C"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginHorizontal="48dp"
+        android:background="@drawable/user_container"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/textFeedback"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <!-- ✅ Espace pour centrer verticalement -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- ✅ Bouton Terminer -->
+    <TextView
+        android:id="@+id/btnQuit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Terminer l'exercice"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@drawable/user_container"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="16dp"/>
+</LinearLayout>
