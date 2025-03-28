@@ -28,6 +28,7 @@
         <activity android:name=".multiplications.MultiplicationCorrectionActivity" />
         <activity android:name=".quizzFrancais.FrancaisSplashScreenActivity" />
         <activity android:name=".quizzFrancais.FrancaisQuizActivity" />
+        <activity android:name=".quizzFrancais.FrancaisQuizResultatActivity" />
     </application>
 
 </manifest>

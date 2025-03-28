@@ -1,6 +1,7 @@
 package fr.iut.androidprojet.quizzFrancais;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -17,12 +18,16 @@ import java.util.concurrent.TimeUnit;
 import fr.iut.androidprojet.R;
 import fr.iut.androidprojet.database.DatabaseClient;
 import fr.iut.androidprojet.model.QuestionFr;
+import fr.iut.androidprojet.model.User;
+import fr.iut.androidprojet.multiplications.MultiplicationActivity;
 
 public class FrancaisQuizActivity extends AppCompatActivity {
 
     private TextView textQuestion, textProgress, textTimer, textFeedback;
     private TextView btnAnswerA, btnAnswerB, btnAnswerC, btnQuit;
     private ImageView heart1, heart2, heart3;
+
+    private User currentUser;
 
     private List<QuestionFr> questions;
     private int currentQuestionIndex = 0;
@@ -40,6 +45,11 @@ public class FrancaisQuizActivity extends AppCompatActivity {
         initViews();
         loadQuestions();
         setupListeners();
+
+        int userId = getIntent().getIntExtra("user_id", -1);
+
+        loadUserFromDatabase(userId);
+
     }
 
     private void initViews() {
@@ -152,8 +162,32 @@ public class FrancaisQuizActivity extends AppCompatActivity {
 
     private void goToGameOver() {
         if (timer != null) timer.cancel();
-        // TODO : remplacer plus tard
-        Toast.makeText(this, "Tu as perdu !", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, FrancaisQuizResultatActivity.class);
+        intent.putExtra("score", currentQuestionIndex);
+        intent.putExtra("user_id", currentUser.getId());
+        startActivity(intent);
         finish();
     }
+
+    private void loadUserFromDatabase(int userId) {
+        class GetUserTask extends AsyncTask<Void, Void, User> {
+            @Override
+            protected User doInBackground(Void... voids) {
+                return DatabaseClient.getInstance(getApplicationContext())
+                        .getAppDatabase().userDao().getUserById(userId);
+            }
+
+            @Override
+            protected void onPostExecute(User user) {
+                if (user == null) {
+                    Toast.makeText(FrancaisQuizActivity.this, "Utilisateur introuvable", Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    currentUser = user;
+                }
+            }
+        }
+        new GetUserTask().execute();
+    }
+
 }
