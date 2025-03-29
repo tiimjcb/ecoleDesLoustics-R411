@@ -16,7 +16,7 @@ import fr.iut.androidprojet.calcul.CalculActivity;
 public class SelectExerciseActivity extends AppCompatActivity {
 
     private TextView textSelectedUser, textUserScore, btnBackToUsers;
-    private LinearLayout cardAdditions, cardMultiplications, cardFrancais;
+    private LinearLayout cardAdditions, cardMultiplications, cardFrancais, cardSoustractions, cardDivisions, cardMix;
 
     private int userId;
     private boolean isAnonymous;
@@ -31,7 +31,10 @@ public class SelectExerciseActivity extends AppCompatActivity {
         textUserScore = findViewById(R.id.textUserScore);
         btnBackToUsers = findViewById(R.id.btnBackToUsers);
         cardAdditions = findViewById(R.id.cardAdditions);
+        cardSoustractions = findViewById(R.id.cardSubstract);
         cardMultiplications = findViewById(R.id.cardMultiply);
+        cardDivisions = findViewById(R.id.cardDivisions);
+        cardMix = findViewById(R.id.cardMix);
         cardFrancais = findViewById(R.id.cardFrancais);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
@@ -57,6 +60,24 @@ public class SelectExerciseActivity extends AppCompatActivity {
         cardMultiplications.setOnClickListener(v -> {
             Intent intent = new Intent(this, CalculActivity.class);
             intent.putExtra("operation", "multiplication");
+            startActivity(intent);
+        });
+
+        cardSoustractions.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CalculActivity.class);
+            intent.putExtra("operation", "soustraction");
+            startActivity(intent);
+        });
+
+        cardDivisions.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CalculActivity.class);
+            intent.putExtra("operation", "division");
+            startActivity(intent);
+        });
+
+        cardMix.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CalculActivity.class);
+            intent.putExtra("operation", "mix");
             startActivity(intent);
         });
 

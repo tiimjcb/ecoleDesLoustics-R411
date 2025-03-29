@@ -20,7 +20,6 @@ import java.util.Random;
 import fr.iut.androidprojet.R;
 import fr.iut.androidprojet.database.DatabaseClient;
 import fr.iut.androidprojet.model.User;
-import fr.iut.androidprojet.calcul.CorrectionCalculActivity;
 
 public class CalculActivity extends AppCompatActivity {
 
@@ -37,8 +36,9 @@ public class CalculActivity extends AppCompatActivity {
     private final int total = 10;
     private int currentIndex = 0;
 
-    private List<int[]> calculs = new ArrayList<>();
-    private List<String> userAnswers = new ArrayList<>();
+    private final List<int[]> calculs = new ArrayList<>();
+    private final List<String> userAnswers = new ArrayList<>();
+    private final List<String> operationModes = new ArrayList<>();
 
     private final Random random = new Random();
 
@@ -47,7 +47,7 @@ public class CalculActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calcul_activity);
 
-        mode = getIntent().getStringExtra("mode");
+        mode = getIntent().getStringExtra("operation");
         if (mode == null) mode = "addition";
 
         SharedPreferences prefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
@@ -121,6 +121,7 @@ public class CalculActivity extends AppCompatActivity {
 
             calculs.add(new int[]{a, b});
             userAnswers.add("");
+            operationModes.add(currentMode);
         }
     }
 
@@ -141,7 +142,7 @@ public class CalculActivity extends AppCompatActivity {
         left.setTextSize(24);
 
         TextView op = new TextView(this);
-        op.setText(" " + getOperatorSymbol() + " ");
+        op.setText(" " + getOperatorSymbol(currentIndex) + " ");
         op.setTextSize(24);
 
         TextView right = new TextView(this);
@@ -174,8 +175,10 @@ public class CalculActivity extends AppCompatActivity {
         userAnswers.set(currentIndex, answer);
     }
 
-    private int getExpectedResult(int a, int b) {
-        switch (mode) {
+    private int getExpectedResult(int a, int b, int index) {
+        String m = mode.equals("mix") ? operationModes.get(index) : mode;
+
+        switch (m) {
             case "multiplication": return a * b;
             case "soustraction": return a - b;
             case "division": return a / b;
@@ -187,7 +190,7 @@ public class CalculActivity extends AppCompatActivity {
         int score = 0;
         for (int i = 0; i < total; i++) {
             try {
-                int expected = getExpectedResult(calculs.get(i)[0], calculs.get(i)[1]);
+                int expected = getExpectedResult(calculs.get(i)[0], calculs.get(i)[1], i);
                 int input = Integer.parseInt(userAnswers.get(i));
                 if (input == expected) score++;
             } catch (Exception ignored) {}
@@ -228,6 +231,9 @@ public class CalculActivity extends AppCompatActivity {
             intent.putExtra("a" + i, calculs.get(i)[0]);
             intent.putExtra("b" + i, calculs.get(i)[1]);
             intent.putExtra("answer" + i, userAnswers.get(i));
+            if (mode.equals("mix")) {
+                intent.putExtra("op" + i, operationModes.get(i));
+            }
         }
         startActivity(intent);
         finish();
@@ -256,8 +262,10 @@ public class CalculActivity extends AppCompatActivity {
         new GetUserTask().execute();
     }
 
-    private String getOperatorSymbol() {
-        switch (mode) {
+    private String getOperatorSymbol(int index) {
+        String m = mode.equals("mix") ? operationModes.get(index) : mode;
+
+        switch (m) {
             case "multiplication": return "×";
             case "soustraction": return "−";
             case "division": return "÷";

@@ -11,13 +11,12 @@ import androidx.core.content.ContextCompat;
 
 import fr.iut.androidprojet.R;
 import fr.iut.androidprojet.SelectExerciseActivity;
-import fr.iut.androidprojet.calcul.CalculActivity;
 
 public class CorrectionCalculActivity extends AppCompatActivity {
 
     private LinearLayout correctionContainer;
     private TextView correctionScore, textTitreCorrection;
-    private String operationType;
+    private String mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,27 +29,25 @@ public class CorrectionCalculActivity extends AppCompatActivity {
 
         int score = getIntent().getIntExtra("score", 0);
         int total = getIntent().getIntExtra("total", 10);
-        operationType = getIntent().getStringExtra("mode");
+        mode = getIntent().getStringExtra("mode");
 
-        if (operationType == null) operationType = "calcul";
+        if (mode == null) mode = "calcul";
 
-        // Titre dynamique
-        String titre = "Correction - " + operationType.substring(0, 1).toUpperCase() + operationType.substring(1);
+        String titre = "Correction - " + mode.substring(0, 1).toUpperCase() + mode.substring(1);
         textTitreCorrection.setText(titre);
 
-        // Score
         correctionScore.setText("Score : " + score + "/" + total);
 
-        // Affichage des questions et réponses
         for (int i = 0; i < total; i++) {
             int a = getIntent().getIntExtra("a" + i, 0);
             int b = getIntent().getIntExtra("b" + i, 0);
             String answer = getIntent().getStringExtra("answer" + i);
+            String currentOp = mode.equals("mix") ? getIntent().getStringExtra("op" + i) : mode;
 
             int expected = 0;
             String symbol = "?";
 
-            switch (operationType) {
+            switch (currentOp) {
                 case "addition":
                     expected = a + b;
                     symbol = " + ";
@@ -98,28 +95,8 @@ public class CorrectionCalculActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.btnRetry).setOnClickListener(v -> {
-            Intent retryIntent = new Intent();
-            switch (operationType) {
-                case "addition":
-                    retryIntent.setClass(this, CalculActivity.class);
-                    retryIntent.putExtra("operation", "addition");
-                    break;
-                case "multiplication":
-                    retryIntent.setClass(this, CalculActivity.class);
-                    retryIntent.putExtra("operation", "multiplication");
-                    break;
-                case "soustraction":
-                    retryIntent.setClass(this, CalculActivity.class);
-                    retryIntent.putExtra("operation", "soustraction");
-                    break;
-                case "division":
-                    retryIntent.setClass(this, CalculActivity.class);
-                    retryIntent.putExtra("operation", "division");
-                    break;
-                default:
-                    retryIntent.setClass(this, SelectExerciseActivity.class);
-            }
-
+            Intent retryIntent = new Intent(this, CalculActivity.class);
+            retryIntent.putExtra("operation", mode);
             startActivity(retryIntent);
             finish();
         });
