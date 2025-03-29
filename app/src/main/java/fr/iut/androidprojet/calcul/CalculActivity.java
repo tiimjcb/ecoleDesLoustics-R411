@@ -1,4 +1,4 @@
-package fr.iut.androidprojet.multiplications;
+package fr.iut.androidprojet.calcul;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,35 +20,49 @@ import java.util.Random;
 import fr.iut.androidprojet.R;
 import fr.iut.androidprojet.database.DatabaseClient;
 import fr.iut.androidprojet.model.User;
+import fr.iut.androidprojet.calcul.CorrectionCalculActivity;
 
-public class MultiplicationActivity extends AppCompatActivity {
+public class CalculActivity extends AppCompatActivity {
+
     private User currentUser;
     private boolean isAnonymous = false;
     private int userId = -1;
 
-    private LinearLayout multiplicationContainer;
-    private TextView textProgress, btnBack, btnNext;
+    private String mode = "addition";
+
+    private LinearLayout containerCalcul;
+    private TextView textTitreCalcul, textProgress, btnBack, btnNext;
     private EditText answerField;
-    private List<int[]> multiplications = new ArrayList<>();
-    private List<String> userAnswers = new ArrayList<>();
-    private int currentIndex = 0;
+
     private final int total = 10;
+    private int currentIndex = 0;
+
+    private List<int[]> calculs = new ArrayList<>();
+    private List<String> userAnswers = new ArrayList<>();
+
+    private final Random random = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_multiplications);
+        setContentView(R.layout.calcul_activity);
+
+        mode = getIntent().getStringExtra("mode");
+        if (mode == null) mode = "addition";
 
         SharedPreferences prefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userId = prefs.getInt("user_id", -1);
         isAnonymous = prefs.getBoolean("is_anonymous", false);
 
-        multiplicationContainer = findViewById(R.id.multiplicationContainer);
+        textTitreCalcul = findViewById(R.id.textTitreCalcul);
         textProgress = findViewById(R.id.textProgress);
+        containerCalcul = findViewById(R.id.containerCalcul);
         btnBack = findViewById(R.id.btnBack);
         btnNext = findViewById(R.id.btnValidate);
 
-        generateMultiplications();
+        textTitreCalcul.setText("Réponds aux " + getFriendlyModeLabel());
+
+        generateCalculs();
 
         if (!isAnonymous && userId != -1) {
             loadUserFromDatabase(userId);
@@ -60,7 +74,7 @@ public class MultiplicationActivity extends AppCompatActivity {
             } else {
                 saveCurrentAnswer();
                 currentIndex--;
-                displayCurrentMultiplication();
+                displayCurrentCalcul();
             }
         });
 
@@ -70,27 +84,52 @@ public class MultiplicationActivity extends AppCompatActivity {
                 launchCorrection();
             } else {
                 currentIndex++;
-                displayCurrentMultiplication();
+                displayCurrentCalcul();
             }
         });
 
-        displayCurrentMultiplication();
+        displayCurrentCalcul();
     }
 
-    private void generateMultiplications() {
-        Random random = new Random();
+    private void generateCalculs() {
         for (int i = 0; i < total; i++) {
-            int a = random.nextInt(10) + 1;
-            int b = random.nextInt(10) + 1;
-            multiplications.add(new int[]{a, b});
+            int a, b;
+            String currentMode = mode;
+
+            if (mode.equals("mix")) {
+                String[] allModes = {"addition", "multiplication", "soustraction", "division"};
+                currentMode = allModes[random.nextInt(allModes.length)];
+            }
+
+            switch (currentMode) {
+                case "multiplication":
+                    a = random.nextInt(10) + 1;
+                    b = random.nextInt(10) + 1;
+                    break;
+                case "soustraction":
+                    a = random.nextInt(30) + 10;
+                    b = random.nextInt(a);
+                    break;
+                case "division":
+                    b = random.nextInt(9) + 2;
+                    a = b * (random.nextInt(10) + 1);
+                    break;
+                default: // addition
+                    a = random.nextInt(30) + 1;
+                    b = random.nextInt(30) + 1;
+            }
+
+            calculs.add(new int[]{a, b});
             userAnswers.add("");
         }
     }
 
-    private void displayCurrentMultiplication() {
-        multiplicationContainer.removeAllViews();
-        int[] current = multiplications.get(currentIndex);
+    private void displayCurrentCalcul() {
+        containerCalcul.removeAllViews();
+
+        int[] current = calculs.get(currentIndex);
         String previousAnswer = userAnswers.get(currentIndex);
+
         textProgress.setText((currentIndex + 1) + "/" + total);
 
         LinearLayout row = new LinearLayout(this);
@@ -101,9 +140,9 @@ public class MultiplicationActivity extends AppCompatActivity {
         left.setText(String.valueOf(current[0]));
         left.setTextSize(24);
 
-        TextView sign = new TextView(this);
-        sign.setText(" × ");
-        sign.setTextSize(24);
+        TextView op = new TextView(this);
+        op.setText(" " + getOperatorSymbol() + " ");
+        op.setTextSize(24);
 
         TextView right = new TextView(this);
         right.setText(String.valueOf(current[1]));
@@ -119,11 +158,12 @@ public class MultiplicationActivity extends AppCompatActivity {
         answerField.setEms(3);
 
         row.addView(left);
-        row.addView(sign);
+        row.addView(op);
         row.addView(right);
         row.addView(equals);
         row.addView(answerField);
-        multiplicationContainer.addView(row);
+
+        containerCalcul.addView(row);
 
         btnBack.setText(currentIndex == 0 ? "⏮️ - Retour" : "⬅️ - Précédent");
         btnNext.setText(currentIndex == total - 1 ? "Valider - ✅" : "Suivant - ➡️");
@@ -134,11 +174,20 @@ public class MultiplicationActivity extends AppCompatActivity {
         userAnswers.set(currentIndex, answer);
     }
 
+    private int getExpectedResult(int a, int b) {
+        switch (mode) {
+            case "multiplication": return a * b;
+            case "soustraction": return a - b;
+            case "division": return a / b;
+            default: return a + b;
+        }
+    }
+
     private int calculateScore() {
         int score = 0;
         for (int i = 0; i < total; i++) {
             try {
-                int expected = multiplications.get(i)[0] * multiplications.get(i)[1];
+                int expected = getExpectedResult(calculs.get(i)[0], calculs.get(i)[1]);
                 int input = Integer.parseInt(userAnswers.get(i));
                 if (input == expected) score++;
             } catch (Exception ignored) {}
@@ -154,7 +203,8 @@ public class MultiplicationActivity extends AppCompatActivity {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     DatabaseClient.getInstance(getApplicationContext())
-                            .getAppDatabase().userDao()
+                            .getAppDatabase()
+                            .userDao()
                             .addScoreToUser(currentUser.getId(), finalScore);
                     return null;
                 }
@@ -170,12 +220,13 @@ public class MultiplicationActivity extends AppCompatActivity {
     }
 
     private void goToCorrection(int finalScore) {
-        Intent intent = new Intent(this, MultiplicationCorrectionActivity.class);
+        Intent intent = new Intent(this, CorrectionCalculActivity.class);
         intent.putExtra("score", finalScore);
         intent.putExtra("total", total);
+        intent.putExtra("mode", mode);
         for (int i = 0; i < total; i++) {
-            intent.putExtra("a" + i, multiplications.get(i)[0]);
-            intent.putExtra("b" + i, multiplications.get(i)[1]);
+            intent.putExtra("a" + i, calculs.get(i)[0]);
+            intent.putExtra("b" + i, calculs.get(i)[1]);
             intent.putExtra("answer" + i, userAnswers.get(i));
         }
         startActivity(intent);
@@ -187,13 +238,15 @@ public class MultiplicationActivity extends AppCompatActivity {
             @Override
             protected User doInBackground(Void... voids) {
                 return DatabaseClient.getInstance(getApplicationContext())
-                        .getAppDatabase().userDao().getUserById(userId);
+                        .getAppDatabase()
+                        .userDao()
+                        .getUserById(userId);
             }
 
             @Override
             protected void onPostExecute(User user) {
                 if (user == null) {
-                    Toast.makeText(MultiplicationActivity.this, "Utilisateur introuvable", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CalculActivity.this, "Utilisateur introuvable", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
                     currentUser = user;
@@ -201,5 +254,25 @@ public class MultiplicationActivity extends AppCompatActivity {
             }
         }
         new GetUserTask().execute();
+    }
+
+    private String getOperatorSymbol() {
+        switch (mode) {
+            case "multiplication": return "×";
+            case "soustraction": return "−";
+            case "division": return "÷";
+            default: return "+";
+        }
+    }
+
+    private String getFriendlyModeLabel() {
+        switch (mode) {
+            case "addition": return "additions";
+            case "multiplication": return "multiplications";
+            case "soustraction": return "soustractions";
+            case "division": return "divisions";
+            case "mix": return "calculs";
+            default: return "exercices";
+        }
     }
 }

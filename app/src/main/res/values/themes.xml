@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Thème principal -->
     <style name="Theme.EcoleDesLoustics" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Couleurs de base -->
+        <!-- Couleurs principales -->
         <item name="colorPrimary">#6200EE</item>
         <item name="colorPrimaryVariant">#3700B3</item>
         <item name="colorOnPrimary">#FFFFFF</item>
@@ -11,5 +12,14 @@
         <!-- Suppression de l'ActionBar -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <!-- Pour que le contenu passe sous la status bar -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+
+        <!-- Texte clair ou foncé dans la status bar -->
+        <item name="android:windowLightStatusBar">true</item>
     </style>
+
 </resources>

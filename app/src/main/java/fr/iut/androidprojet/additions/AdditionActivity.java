@@ -1,6 +1,8 @@
 package fr.iut.androidprojet.additions;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -21,6 +23,9 @@ import fr.iut.androidprojet.model.User;
 
 public class AdditionActivity extends AppCompatActivity {
     private User currentUser;
+    private boolean isAnonymous = false;
+    private int userId = -1;
+
     private LinearLayout additionContainer;
     private TextView textProgress;
     private TextView btnBack, btnNext;
@@ -35,12 +40,9 @@ public class AdditionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_additions);
 
-        int userId = getIntent().getIntExtra("user_id", -1);
-        if (userId == -1) {
-            Toast.makeText(this, "Erreur : Aucun utilisateur sélectionné", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        userId = prefs.getInt("user_id", -1);
+        isAnonymous = prefs.getBoolean("is_anonymous", false);
 
         additionContainer = findViewById(R.id.additionContainer);
         textProgress = findViewById(R.id.textProgress);
@@ -48,7 +50,10 @@ public class AdditionActivity extends AppCompatActivity {
         btnNext = findViewById(R.id.btnValidate);
 
         generateAdditions();
-        loadUserFromDatabase(userId);
+
+        if (!isAnonymous && userId != -1) {
+            loadUserFromDatabase(userId);
+        }
 
         btnBack.setOnClickListener(v -> {
             if (currentIndex == 0) {
@@ -147,33 +152,42 @@ public class AdditionActivity extends AppCompatActivity {
 
     private void launchCorrectionActivity() {
         int finalScore = calculateScore();
-        class UpdateScoreTask extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(getApplicationContext()).getAppDatabase()
-                        .userDao().addScoreToUser(currentUser.getId(), finalScore);
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                Intent intent = new Intent(AdditionActivity.this, AdditionCorrectionActivity.class);
-                intent.putExtra("user_id", currentUser.getId());
-                intent.putExtra("score", finalScore);
-                intent.putExtra("total", totalAdditions);
-
-                for (int i = 0; i < totalAdditions; i++) {
-                    intent.putExtra("a" + i, additions.get(i)[0]);
-                    intent.putExtra("b" + i, additions.get(i)[1]);
-                    intent.putExtra("answer" + i, userAnswers.get(i));
+        if (!isAnonymous && currentUser != null) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    DatabaseClient.getInstance(getApplicationContext())
+                            .getAppDatabase()
+                            .userDao()
+                            .addScoreToUser(currentUser.getId(), finalScore);
+                    return null;
                 }
 
-                startActivity(intent);
-                finish();
-            }
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    goToCorrection(finalScore);
+                }
+            }.execute();
+        } else {
+            // juste naviguer
+            goToCorrection(finalScore);
+        }
+    }
+
+    private void goToCorrection(int finalScore) {
+        Intent intent = new Intent(AdditionActivity.this, AdditionCorrectionActivity.class);
+        intent.putExtra("score", finalScore);
+        intent.putExtra("total", totalAdditions);
+
+        for (int i = 0; i < totalAdditions; i++) {
+            intent.putExtra("a" + i, additions.get(i)[0]);
+            intent.putExtra("b" + i, additions.get(i)[1]);
+            intent.putExtra("answer" + i, userAnswers.get(i));
         }
 
-        new UpdateScoreTask().execute();
+        startActivity(intent);
+        finish();
     }
 
     private void loadUserFromDatabase(int userId) {
@@ -182,7 +196,8 @@ public class AdditionActivity extends AppCompatActivity {
             protected User doInBackground(Void... voids) {
                 return DatabaseClient.getInstance(getApplicationContext())
                         .getAppDatabase()
-                        .userDao().getUserById(userId);
+                        .userDao()
+                        .getUserById(userId);
             }
 
             @Override

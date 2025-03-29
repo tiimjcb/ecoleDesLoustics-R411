@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -61,9 +62,7 @@ public class MultiplicationCorrectionActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.btnRetry).setOnClickListener(v -> {
-            Intent intent = new Intent(this, MultiplicationActivity.class);
-            intent.putExtra("user_id", getIntent().getIntExtra("user_id", -1));
-            startActivity(intent);
+            startActivity(new Intent(this, MultiplicationActivity.class));
             finish();
         });
 

@@ -1,6 +1,8 @@
 package fr.iut.androidprojet.quizzFrancais;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -12,11 +14,13 @@ import fr.iut.androidprojet.R;
 import fr.iut.androidprojet.SelectExerciseActivity;
 import fr.iut.androidprojet.database.DatabaseClient;
 import fr.iut.androidprojet.model.User;
-import fr.iut.androidprojet.multiplications.MultiplicationActivity;
 
 public class FrancaisSplashScreenActivity extends AppCompatActivity {
 
     private User currentUser;
+    private boolean isAnonymous = false;
+    private int userId = -1;
+
     private TextView btnStart, btnReturn;
 
     @Override
@@ -24,14 +28,16 @@ public class FrancaisSplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_fr_splashscreen);
 
-        int userId = getIntent().getIntExtra("user_id", -1);
+        // Récupération depuis les prefs
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        userId = prefs.getInt("user_id", -1);
+        isAnonymous = prefs.getBoolean("is_anonymous", false);
 
         btnStart = findViewById(R.id.btnStart);
         btnReturn = findViewById(R.id.btnReturn);
 
         btnStart.setOnClickListener(v -> {
             Intent intent = new Intent(this, FrancaisQuizActivity.class);
-            intent.putExtra("user_id", userId);
             startActivity(intent);
             finish();
         });
@@ -43,7 +49,9 @@ public class FrancaisSplashScreenActivity extends AppCompatActivity {
             finish();
         });
 
-        loadUserFromDatabase(userId);
+        if (!isAnonymous && userId != -1) {
+            loadUserFromDatabase(userId);
+        }
     }
 
     private void loadUserFromDatabase(int userId) {
@@ -66,5 +74,4 @@ public class FrancaisSplashScreenActivity extends AppCompatActivity {
         }
         new GetUserTask().execute();
     }
-
 }

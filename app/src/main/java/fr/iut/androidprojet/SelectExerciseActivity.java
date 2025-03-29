@@ -9,17 +9,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import fr.iut.androidprojet.additions.AdditionActivity;
 import fr.iut.androidprojet.database.DatabaseClient;
-import fr.iut.androidprojet.multiplications.MultiplicationActivity;
 import fr.iut.androidprojet.quizzFrancais.FrancaisSplashScreenActivity;
+import fr.iut.androidprojet.calcul.CalculActivity;
 
 public class SelectExerciseActivity extends AppCompatActivity {
 
     private TextView textSelectedUser, textUserScore, btnBackToUsers;
-    private String firstName, lastName;
-    private int userId;
     private LinearLayout cardAdditions, cardMultiplications, cardFrancais;
+
+    private int userId;
+    private boolean isAnonymous;
+    private String firstName, lastName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,30 +35,33 @@ public class SelectExerciseActivity extends AppCompatActivity {
         cardFrancais = findViewById(R.id.cardFrancais);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", -1);
         firstName = sharedPreferences.getString("user_first_name", "Inconnu");
         lastName = sharedPreferences.getString("user_last_name", "Utilisateur");
-        userId = sharedPreferences.getInt("user_id", -1);
+        isAnonymous = sharedPreferences.getBoolean("is_anonymous", false);
 
-        textSelectedUser.setText("Bonjour " + firstName + " " + lastName +"!");
-
-        loadUserScore();
+        if (isAnonymous || userId == -1) {
+            textSelectedUser.setText("Mode Anonyme");
+            textUserScore.setText("Score non disponible");
+        } else {
+            textSelectedUser.setText("Bonjour " + firstName + " " + lastName + "!");
+            loadUserScore();
+        }
 
         cardAdditions.setOnClickListener(v -> {
-            Intent intent = new Intent(SelectExerciseActivity.this, AdditionActivity.class);
-            intent.putExtra("user_id", userId);
+            Intent intent = new Intent(this, CalculActivity.class);
+            intent.putExtra("operation", "addition");
             startActivity(intent);
         });
 
         cardMultiplications.setOnClickListener(v -> {
-            Intent intent = new Intent(SelectExerciseActivity.this, MultiplicationActivity.class);
-            intent.putExtra("user_id", userId);
+            Intent intent = new Intent(this, CalculActivity.class);
+            intent.putExtra("operation", "multiplication");
             startActivity(intent);
         });
 
         cardFrancais.setOnClickListener(v -> {
-            Intent intent = new Intent(SelectExerciseActivity.this, FrancaisSplashScreenActivity.class);
-            intent.putExtra("user_id", userId);
-            startActivity(intent);
+            startActivity(new Intent(this, FrancaisSplashScreenActivity.class));
         });
 
         btnBackToUsers.setOnClickListener(v -> finish());
@@ -66,7 +70,9 @@ public class SelectExerciseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadUserScore();
+        if (!isAnonymous && userId != -1) {
+            loadUserScore();
+        }
     }
 
     private void loadUserScore() {

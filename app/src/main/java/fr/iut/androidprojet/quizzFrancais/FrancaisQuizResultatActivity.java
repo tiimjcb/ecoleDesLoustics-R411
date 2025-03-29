@@ -1,6 +1,8 @@
 package fr.iut.androidprojet.quizzFrancais;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -19,6 +21,8 @@ public class FrancaisQuizResultatActivity extends AppCompatActivity {
     private TextView btnBackToExercises, btnRetryQuiz;
     private int score;
     private User currentUser;
+    private boolean isAnonymous = false;
+    private int userId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +34,15 @@ public class FrancaisQuizResultatActivity extends AppCompatActivity {
         btnRetryQuiz = findViewById(R.id.btnRetryQuiz);
 
         score = getIntent().getIntExtra("score", 0);
-        int userId = getIntent().getIntExtra("user_id", -1);
-        loadUserFromDatabase(userId);
-
         textScore.setText("Score : " + score + "/40");
+
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        userId = prefs.getInt("user_id", -1);
+        isAnonymous = prefs.getBoolean("is_anonymous", false);
+
+        if (!isAnonymous && userId != -1) {
+            loadUserFromDatabase(userId);
+        }
 
         btnBackToExercises.setOnClickListener(v -> {
             Intent intent = new Intent(this, SelectExerciseActivity.class);
@@ -44,14 +53,13 @@ public class FrancaisQuizResultatActivity extends AppCompatActivity {
 
         btnRetryQuiz.setOnClickListener(v -> {
             Intent retryIntent = new Intent(this, FrancaisQuizActivity.class);
-            retryIntent.putExtra("user_id", userId);
             startActivity(retryIntent);
             finish();
         });
     }
 
     private void updateUserScore() {
-        if (currentUser.getId() == -1) return;
+        if (currentUser == null || currentUser.getId() == -1) return;
 
         class UpdateScoreTask extends AsyncTask<Void, Void, Void> {
             @Override

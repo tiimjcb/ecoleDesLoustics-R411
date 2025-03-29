@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat;
 import fr.iut.androidprojet.R;
 import fr.iut.androidprojet.SelectExerciseActivity;
 
-
 public class AdditionCorrectionActivity extends AppCompatActivity {
     private LinearLayout correctionContainer;
     private TextView correctionScore;
@@ -56,19 +55,17 @@ public class AdditionCorrectionActivity extends AppCompatActivity {
             result.setTextColor(ContextCompat.getColor(this,
                     isCorrect ? R.color.green : R.color.red));
 
-            row.addView(operation);
-            row.addView(result);
-
             operation.setGravity(Gravity.CENTER_HORIZONTAL);
             result.setGravity(Gravity.CENTER_HORIZONTAL);
+
+            row.addView(operation);
+            row.addView(result);
 
             correctionContainer.addView(row);
         }
 
         findViewById(R.id.btnRetry).setOnClickListener(v -> {
-            Intent retryIntent = new Intent(this, AdditionActivity.class);
-            retryIntent.putExtra("user_id", getIntent().getIntExtra("user_id", -1));
-            startActivity(retryIntent);
+            startActivity(new Intent(this, AdditionActivity.class));
             finish();
         });
 

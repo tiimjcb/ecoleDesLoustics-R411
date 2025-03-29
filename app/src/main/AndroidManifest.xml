@@ -29,6 +29,8 @@
         <activity android:name=".quizzFrancais.FrancaisSplashScreenActivity" />
         <activity android:name=".quizzFrancais.FrancaisQuizActivity" />
         <activity android:name=".quizzFrancais.FrancaisQuizResultatActivity" />
+        <activity android:name=".calcul.CorrectionCalculActivity" />
+        <activity android:name=".calcul.CalculActivity" />
     </application>
 
 </manifest>

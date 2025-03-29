@@ -5,15 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
+
 import fr.iut.androidprojet.adapter.UserAdapter;
 import fr.iut.androidprojet.data.QuestionSamples;
 import fr.iut.androidprojet.database.AppDatabase;
@@ -36,12 +38,25 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout btnAddUser = findViewById(R.id.btnAddUser);
         btnAddUser.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CreateUserActivity.class);
-            startActivityForResult(intent, REQUEST_CODE_ADD_USER); // faut attendre le résultat pour recharger la liste
+            startActivityForResult(intent, REQUEST_CODE_ADD_USER);
+        });
+
+        TextView btnPlayAnonymous = findViewById(R.id.btnPlayAnonymous);
+        btnPlayAnonymous.setOnClickListener(v -> {
+            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("user_id", -1);
+            editor.putString("user_first_name", "Anonyme");
+            editor.putString("user_last_name", "");
+            editor.putBoolean("is_anonymous", true);
+            editor.apply();
+
+            Intent intent = new Intent(MainActivity.this, SelectExerciseActivity.class);
+            startActivity(intent);
         });
 
         loadUsers();
         populateQuestionsIfNeeded();
-
     }
 
     @Override
@@ -54,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadUsers() {
-        class GetUsers extends AsyncTask<Void, Void, List<User>> {
+        class GetUsersTask extends AsyncTask<Void, Void, List<User>> {
             @Override
             protected List<User> doInBackground(Void... voids) {
                 return DatabaseClient.getInstance(getApplicationContext())
@@ -65,28 +80,25 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(List<User> users) {
-                super.onPostExecute(users);
                 UserAdapter adapter = new UserAdapter(users,
                         user -> {
                             SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putInt("user_id", user.getId());
-
                             editor.putString("user_first_name", user.getFirstName());
                             editor.putString("user_last_name", user.getLastName());
+                            editor.putBoolean("is_anonymous", false);
                             editor.apply();
 
                             Intent intent = new Intent(MainActivity.this, SelectExerciseActivity.class);
                             startActivity(intent);
                         },
-                        user -> {
-                            showDeleteConfirmation(user);
-                }
-                );
+                        user -> showDeleteConfirmation(user));
                 recyclerViewUsers.setAdapter(adapter);
             }
         }
-        new GetUsers().execute();
+
+        new GetUsersTask().execute();
     }
 
     private void showDeleteConfirmation(User user) {
@@ -97,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
                 .show();
     }
-
 
     private void deleteUserFromDatabase(User user) {
         new AsyncTask<Void, Void, Void>() {
@@ -118,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
-    // nécéssaire pour remplir la base de données avec des questions si jamais y'a rien
     private void populateQuestionsIfNeeded() {
         new AsyncTask<Void, Void, Void>() {
             @Override

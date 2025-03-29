@@ -1,6 +1,8 @@
 package fr.iut.androidprojet.quizzFrancais;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -19,7 +21,6 @@ import fr.iut.androidprojet.R;
 import fr.iut.androidprojet.database.DatabaseClient;
 import fr.iut.androidprojet.model.QuestionFr;
 import fr.iut.androidprojet.model.User;
-import fr.iut.androidprojet.multiplications.MultiplicationActivity;
 
 public class FrancaisQuizActivity extends AppCompatActivity {
 
@@ -28,6 +29,8 @@ public class FrancaisQuizActivity extends AppCompatActivity {
     private ImageView heart1, heart2, heart3;
 
     private User currentUser;
+    private boolean isAnonymous = false;
+    private int userId = -1;
 
     private List<QuestionFr> questions;
     private int currentQuestionIndex = 0;
@@ -42,14 +45,18 @@ public class FrancaisQuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_fr);
 
+        // Récupération des prefs
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        userId = prefs.getInt("user_id", -1);
+        isAnonymous = prefs.getBoolean("is_anonymous", false);
+
         initViews();
         loadQuestions();
         setupListeners();
 
-        int userId = getIntent().getIntExtra("user_id", -1);
-
-        loadUserFromDatabase(userId);
-
+        if (!isAnonymous && userId != -1) {
+            loadUserFromDatabase(userId);
+        }
     }
 
     private void initViews() {
@@ -162,9 +169,9 @@ public class FrancaisQuizActivity extends AppCompatActivity {
 
     private void goToGameOver() {
         if (timer != null) timer.cancel();
+
         Intent intent = new Intent(this, FrancaisQuizResultatActivity.class);
-        intent.putExtra("score", currentQuestionIndex);
-        intent.putExtra("user_id", currentUser.getId());
+        intent.putExtra("score", currentQuestionIndex); // pas besoin de user_id
         startActivity(intent);
         finish();
     }
@@ -189,5 +196,4 @@ public class FrancaisQuizActivity extends AppCompatActivity {
         }
         new GetUserTask().execute();
     }
-
 }
